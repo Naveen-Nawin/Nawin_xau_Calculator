@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>XAU Profit Calculator Pro</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    background:#0f172a;
+    color:white;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.container{
+    width:100%;
+    max-width:600px;
+    background:#1e293b;
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 0 25px rgba(0,0,0,.5);
+}
+
+h1{
+    text-align:center;
+    margin-bottom:25px;
+    color:#38bdf8;
+}
+
+.input-box{
+    margin-bottom:15px;
+}
+
+label{
+    display:block;
+    margin-bottom:6px;
+    color:#cbd5e1;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:#334155;
+    color:white;
+    font-size:16px;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+    margin-top:20px;
+}
+
+.card{
+    background:#0f172a;
+    padding:15px;
+    border-radius:15px;
+}
+
+.card-title{
+    color:#94a3b8;
+    font-size:14px;
+}
+
+.card-value{
+    margin-top:10px;
+    font-size:26px;
+    font-weight:bold;
+}
+
+.profit{
+    color:#22c55e;
+}
+
+.loss{
+    color:#ef4444;
+}
+
+.rr{
+    color:#f59e0b;
+}
+
+.target{
+    color:#38bdf8;
+}
+
+button{
+    width:100%;
+    margin-top:20px;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:16px;
+    background:#38bdf8;
+    color:black;
+    font-weight:bold;
+}
+
+.footer{
+    text-align:center;
+    margin-top:20px;
+    color:#94a3b8;
+    font-size:14px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>XAUUSD Profit Calculator</h1>
+
+<div class="input-box">
+<label>Lot Size</label>
+<input type="number" id="lot" value="0.08" step="0.01">
+</div>
+
+<div class="input-box">
+<label>Points Captured</label>
+<input type="number" id="points" value="0" step="0.1">
+</div>
+
+<div class="input-box">
+<label>Stop Loss Points</label>
+<input type="number" id="sl" value="0" step="0.1">
+</div>
+
+<div class="input-box">
+<label>Account Target ($)</label>
+<input type="number" id="targetInput" value="1000">
+</div>
+
+<div class="cards">
+
+<div class="card">
+<div class="card-title">Profit</div>
+<div class="card-value profit" id="profit">$0.00</div>
+</div>
+
+<div class="card">
+<div class="card-title">Loss</div>
+<div class="card-value loss" id="loss">$0.00</div>
+</div>
+
+<div class="card">
+<div class="card-title">Risk : Reward</div>
+<div class="card-value rr" id="rr">0 : 1</div>
+</div>
+
+<div class="card">
+<div class="card-title">Target Completion</div>
+<div class="card-value target" id="targetPercent">0%</div>
+</div>
+
+</div>
+
+<button onclick="resetFields()">Reset Calculator</button>
+
+<div class="footer">
+Based on: 0.08 Lots = $54.72 Profit at 6.5 Points
+</div>
+
+</div>
+
+<script>
+
+const BASE_LOT = 0.08;
+const BASE_POINTS = 6.5;
+const BASE_PROFIT = 54.72;
+
+function calculate(){
+
+    let lot =
+        parseFloat(document.getElementById("lot").value) || 0;
+
+    let points =
+        parseFloat(document.getElementById("points").value) || 0;
+
+    let sl =
+        parseFloat(document.getElementById("sl").value) || 0;
+
+    let target =
+        parseFloat(document.getElementById("targetInput").value) || 1;
+
+    let profit =
+        BASE_PROFIT *
+        (lot / BASE_LOT) *
+        (points / BASE_POINTS);
+
+    let loss =
+        BASE_PROFIT *
+        (lot / BASE_LOT) *
+        (sl / BASE_POINTS);
+
+    let rr =
+        sl > 0 ? (points/sl).toFixed(2) : "0";
+
+    let targetPercent =
+        ((profit/target)*100).toFixed(2);
+
+    document.getElementById("profit").innerHTML =
+        "$" + profit.toFixed(2);
+
+    document.getElementById("loss").innerHTML =
+        "$" + loss.toFixed(2);
+
+    document.getElementById("rr").innerHTML =
+        rr + " : 1";
+
+    document.getElementById("targetPercent").innerHTML =
+        targetPercent + "%";
+}
+
+function resetFields(){
+
+    document.getElementById("lot").value = 0.08;
+    document.getElementById("points").value = 0;
+    document.getElementById("sl").value = 0;
+    calculate();
+}
+
+document.querySelectorAll("input").forEach(input=>{
+    input.addEventListener("input",calculate);
+});
+
+calculate();
+
+</script>
+
+</body>
+</html>
