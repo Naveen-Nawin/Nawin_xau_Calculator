@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>XAU Profit Calculator Pro</title>
+<title>Trading Profit Calculator</title>
 
 <style>
+
+/* ================================
+   GLOBAL
+================================ */
 
 *{
     margin:0;
@@ -25,6 +31,11 @@ body{
     padding:20px;
 }
 
+
+/* ================================
+   MAIN CONTAINER
+================================ */
+
 .container{
     width:100%;
     max-width:600px;
@@ -34,11 +45,69 @@ body{
     box-shadow:0 0 25px rgba(0,0,0,.5);
 }
 
+
+/* ================================
+   MARKET SELECTOR
+================================ */
+
+.market-selector{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+
+    background:#0f172a;
+    padding:8px;
+
+    border-radius:14px;
+    margin-bottom:25px;
+}
+
+.market-btn{
+
+    border:none;
+    background:transparent;
+
+    color:#cbd5e1;
+
+    padding:10px 5px;
+
+    border-radius:10px;
+
+    font-size:15px;
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.market-btn:hover{
+    background:#334155;
+}
+
+.market-btn.active{
+    background:#38bdf8;
+    color:#020617;
+
+    box-shadow:0 0 12px rgba(56,189,248,.35);
+}
+
+
+/* ================================
+   TITLE
+================================ */
+
 h1{
     text-align:center;
     margin-bottom:25px;
     color:#38bdf8;
+    font-size:24px;
 }
+
+
+/* ================================
+   INPUTS
+================================ */
 
 .input-box{
     margin-bottom:15px;
@@ -46,42 +115,80 @@ h1{
 
 label{
     display:block;
-    margin-bottom:6px;
-    color:#cbd5e1;
-}
 
-input{
-    width:100%;
-    padding:12px;
-    border:none;
-    border-radius:10px;
-    background:#334155;
-    color:white;
+    margin-bottom:6px;
+
+    color:#cbd5e1;
+
     font-size:16px;
 }
 
+input{
+
+    width:100%;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#334155;
+
+    color:white;
+
+    font-size:16px;
+
+    outline:none;
+}
+
+input:focus{
+    box-shadow:0 0 0 2px #38bdf8;
+}
+
+
+/* ================================
+   RESULT CARDS
+================================ */
+
 .cards{
+
     display:grid;
+
     grid-template-columns:1fr 1fr;
+
     gap:15px;
+
     margin-top:20px;
 }
 
 .card{
+
     background:#0f172a;
+
     padding:15px;
+
     border-radius:15px;
 }
 
 .card-title{
+
     color:#94a3b8;
+
     font-size:14px;
 }
 
 .card-value{
+
     margin-top:10px;
+
     font-size:26px;
+
     font-weight:bold;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
 }
 
 .profit{
@@ -100,151 +207,953 @@ input{
     color:#38bdf8;
 }
 
-button{
+.quantity{
+    color:#a78bfa;
+}
+
+
+/* ================================
+   RESET
+================================ */
+
+button.reset{
+
     width:100%;
+
     margin-top:20px;
+
     padding:12px;
+
     border:none;
+
     border-radius:10px;
+
     cursor:pointer;
+
     font-size:16px;
+
     background:#38bdf8;
+
     color:black;
+
     font-weight:bold;
 }
 
+button.reset:hover{
+    background:#0ea5e9;
+}
+
+
+/* ================================
+   FOOTER
+================================ */
+
 .footer{
+
     text-align:center;
+
     margin-top:20px;
+
     color:#94a3b8;
+
     font-size:14px;
 }
 
+
+/* ================================
+   MOBILE
+================================ */
+
+@media(max-width:500px){
+
+    body{
+        padding:15px;
+    }
+
+    .container{
+        padding:20px;
+    }
+
+    .market-selector{
+        gap:5px;
+        padding:6px;
+    }
+
+    .market-btn{
+        font-size:13px;
+        padding:10px 3px;
+    }
+
+    h1{
+        font-size:22px;
+    }
+
+    .card-value{
+        font-size:23px;
+    }
+
+}
+
 </style>
+
 </head>
+
 
 <body>
 
+
 <div class="container">
 
-<h1>XAUUSD Profit Calculator</h1>
 
-<div class="input-box">
-<label>Lot Size</label>
-<input type="number" id="lot" value="0.08" step="0.01">
+<!-- =================================
+     MARKET SELECTOR
+================================= -->
+
+<div class="market-selector">
+
+    <button
+        class="market-btn active"
+        onclick="selectMarket('xau')"
+        id="btn-xau"
+    >
+        XAU/USD
+    </button>
+
+    <button
+        class="market-btn"
+        onclick="selectMarket('eth')"
+        id="btn-eth"
+    >
+        ETH
+    </button>
+
+    <button
+        class="market-btn"
+        onclick="selectMarket('nifty')"
+        id="btn-nifty"
+    >
+        NIFTY
+    </button>
+
+    <button
+        class="market-btn"
+        onclick="selectMarket('sensex')"
+        id="btn-sensex"
+    >
+        SENSEX
+    </button>
+
 </div>
 
-<div class="input-box">
-<label>Points Captured</label>
-<input type="number" id="points" value="0" step="0.1">
+
+<!-- =================================
+     TITLE
+================================= -->
+
+<h1 id="calculatorTitle">
+XAUUSD Profit Calculator
+</h1>
+
+
+<!-- =================================
+     INPUT AREA
+================================= -->
+
+<div id="inputs">
+
+
+    <!-- LOT / QUANTITY -->
+
+    <div class="input-box">
+
+        <label id="sizeLabel">
+        Lot Size
+        </label>
+
+        <input
+            type="number"
+            id="sizeInput"
+            value="0.08"
+            min="0"
+            step="0.01"
+        >
+
+    </div>
+
+
+    <!-- POINTS -->
+
+    <div class="input-box">
+
+        <label>
+        Points Captured
+        </label>
+
+        <input
+            type="number"
+            id="points"
+            value="0"
+            step="0.01"
+        >
+
+    </div>
+
+
+    <!-- SL -->
+
+    <div class="input-box">
+
+        <label>
+        Stop Loss Points
+        </label>
+
+        <input
+            type="number"
+            id="sl"
+            value="0"
+            min="0"
+            step="0.01"
+        >
+
+    </div>
+
+
+    <!-- TARGET -->
+
+    <div class="input-box">
+
+        <label id="targetLabel">
+        Account Target ($)
+        </label>
+
+        <input
+            type="number"
+            id="targetInput"
+            value="1000"
+            min="0"
+            step="1"
+        >
+
+    </div>
+
 </div>
 
-<div class="input-box">
-<label>Stop Loss Points</label>
-<input type="number" id="sl" value="0" step="0.1">
-</div>
 
-<div class="input-box">
-<label>Account Target ($)</label>
-<input type="number" id="targetInput" value="1000">
-</div>
+<!-- =================================
+     RESULTS
+================================= -->
 
 <div class="cards">
 
-<div class="card">
-<div class="card-title">Profit</div>
-<div class="card-value profit" id="profit">$0.00</div>
+
+    <!-- PROFIT -->
+
+    <div class="card">
+
+        <div class="card-title">
+        Profit
+        </div>
+
+        <div
+            class="card-value profit"
+            id="profit"
+        >
+        $0.00
+        </div>
+
+    </div>
+
+
+    <!-- LOSS -->
+
+    <div class="card">
+
+        <div class="card-title">
+        Loss
+        </div>
+
+        <div
+            class="card-value loss"
+            id="loss"
+        >
+        $0.00
+        </div>
+
+    </div>
+
+
+    <!-- RISK REWARD -->
+
+    <div class="card">
+
+        <div class="card-title">
+        Risk : Reward
+        </div>
+
+        <div
+            class="card-value rr"
+            id="rr"
+        >
+        0 : 1
+        </div>
+
+    </div>
+
+
+    <!-- TARGET -->
+
+    <div class="card">
+
+        <div class="card-title">
+        Target Completion
+        </div>
+
+        <div
+            class="card-value target"
+            id="targetPercent"
+        >
+        0%
+        </div>
+
+    </div>
+
+
+    <!-- QUANTITY -->
+
+    <div class="card">
+
+        <div class="card-title">
+        Quantity
+        </div>
+
+        <div
+            class="card-value quantity"
+            id="quantity"
+        >
+        0.00
+        </div>
+
+    </div>
+
+
+    <!-- VALUE PER POINT -->
+
+    <div class="card">
+
+        <div class="card-title">
+        Value / Point
+        </div>
+
+        <div
+            class="card-value quantity"
+            id="valuePerPoint"
+        >
+        $0.00
+        </div>
+
+    </div>
+
+
 </div>
 
-<div class="card">
-<div class="card-title">Loss</div>
-<div class="card-value loss" id="loss">$0.00</div>
+
+<!-- =================================
+     RESET
+================================= -->
+
+<button
+    class="reset"
+    onclick="resetCalculator()"
+>
+Reset Calculator
+</button>
+
+
+<!-- =================================
+     FOOTER
+================================= -->
+
+<div
+    class="footer"
+    id="footer"
+>
+0.08 Lots • XAU/USD
 </div>
 
-<div class="card">
-<div class="card-title">Risk : Reward</div>
-<div class="card-value rr" id="rr">0 : 1</div>
-</div>
-
-<div class="card">
-<div class="card-title">Target Completion</div>
-<div class="card-value target" id="targetPercent">0%</div>
-</div>
 
 </div>
 
-<button onclick="resetFields()">Reset Calculator</button>
-
-<div class="footer">
-Based on: 0.08 Lots = $54.72 Profit at 6.5 Points
-</div>
-
-</div>
 
 <script>
 
-const BASE_LOT = 0.08;
-const BASE_POINTS = 6.5;
-const BASE_PROFIT = 54.72;
+/* ==========================================================
+   CURRENT MARKET
+========================================================== */
+
+let currentMarket = "xau";
+
+
+/* ==========================================================
+   MARKET SETTINGS
+========================================================== */
+
+const markets = {
+
+    /* --------------------------------
+       XAU/USD
+    -------------------------------- */
+
+    xau: {
+
+        title:
+        "XAUUSD Profit Calculator",
+
+        sizeLabel:
+        "Lot Size",
+
+        targetLabel:
+        "Account Target ($)",
+
+        currency:
+        "$",
+
+        defaultSize:
+        0.08,
+
+        step:
+        0.01,
+
+        /*
+         YOUR ORIGINAL XAU CALCULATION
+
+         0.08 lot
+         6.5 points
+         = $54.72
+        */
+
+        baseLot:
+        0.08,
+
+        basePoints:
+        6.5,
+
+        baseProfit:
+        54.72,
+
+        type:
+        "xau"
+
+    },
+
+
+    /* --------------------------------
+       ETH/USD
+    -------------------------------- */
+
+    eth: {
+
+        title:
+        "ETH/USD Profit Calculator",
+
+        sizeLabel:
+        "ETH Quantity",
+
+        targetLabel:
+        "Account Target ($)",
+
+        currency:
+        "$",
+
+        defaultSize:
+        2.64,
+
+        step:
+        0.01,
+
+        type:
+        "eth"
+
+    },
+
+
+    /* --------------------------------
+       NIFTY
+    -------------------------------- */
+
+    nifty: {
+
+        title:
+        "NIFTY Profit Calculator",
+
+        sizeLabel:
+        "Lot Size",
+
+        targetLabel:
+        "Account Target (₹)",
+
+        currency:
+        "₹",
+
+        defaultSize:
+        1,
+
+        step:
+        1,
+
+        /*
+         NIFTY
+         1 LOT = 65 QUANTITY
+        */
+
+        quantityPerLot:
+        65,
+
+        type:
+        "index"
+
+    },
+
+
+    /* --------------------------------
+       SENSEX
+    -------------------------------- */
+
+    sensex: {
+
+        title:
+        "SENSEX Profit Calculator",
+
+        sizeLabel:
+        "Lot Size",
+
+        targetLabel:
+        "Account Target (₹)",
+
+        currency:
+        "₹",
+
+        defaultSize:
+        1,
+
+        step:
+        1,
+
+        /*
+         SENSEX
+         1 LOT = 20 QUANTITY
+        */
+
+        quantityPerLot:
+        20,
+
+        type:
+        "index"
+
+    }
+
+};
+
+
+/* ==========================================================
+   SELECT MARKET
+========================================================== */
+
+function selectMarket(market){
+
+    currentMarket = market;
+
+    const config = markets[market];
+
+
+    /* -------------------------------
+       ACTIVE BUTTON
+    ------------------------------- */
+
+    document
+    .querySelectorAll(".market-btn")
+    .forEach(button => {
+
+        button.classList.remove("active");
+
+    });
+
+
+    document
+    .getElementById("btn-" + market)
+    .classList.add("active");
+
+
+    /* -------------------------------
+       TITLE
+    ------------------------------- */
+
+    document
+    .getElementById("calculatorTitle")
+    .innerHTML = config.title;
+
+
+    /* -------------------------------
+       LABELS
+    ------------------------------- */
+
+    document
+    .getElementById("sizeLabel")
+    .innerHTML = config.sizeLabel;
+
+
+    document
+    .getElementById("targetLabel")
+    .innerHTML = config.targetLabel;
+
+
+    /* -------------------------------
+       DEFAULT VALUE
+    ------------------------------- */
+
+    document
+    .getElementById("sizeInput")
+    .value = config.defaultSize;
+
+
+    document
+    .getElementById("points")
+    .value = 0;
+
+
+    document
+    .getElementById("sl")
+    .value = 0;
+
+
+    document
+    .getElementById("targetInput")
+    .value = 1000;
+
+
+    /* -------------------------------
+       FOOTER
+    ------------------------------- */
+
+    if(market === "xau"){
+
+        document
+        .getElementById("footer")
+        .innerHTML =
+        "0.08 Lots = $54.72 Profit at 6.5 Points";
+
+    }
+
+    else if(market === "eth"){
+
+        document
+        .getElementById("footer")
+        .innerHTML =
+        "P/L = ETH Quantity × Price Movement";
+
+    }
+
+    else if(market === "nifty"){
+
+        document
+        .getElementById("footer")
+        .innerHTML =
+        "1 Lot = 65 Quantity";
+
+    }
+
+    else if(market === "sensex"){
+
+        document
+        .getElementById("footer")
+        .innerHTML =
+        "1 Lot = 20 Quantity";
+
+    }
+
+
+    calculate();
+
+}
+
+
+/* ==========================================================
+   CALCULATE
+========================================================== */
 
 function calculate(){
 
-    let lot =
-        parseFloat(document.getElementById("lot").value) || 0;
+    const config =
+    markets[currentMarket];
+
+
+    let size =
+    parseFloat(
+        document.getElementById("sizeInput").value
+    ) || 0;
+
 
     let points =
-        parseFloat(document.getElementById("points").value) || 0;
+    parseFloat(
+        document.getElementById("points").value
+    ) || 0;
+
 
     let sl =
-        parseFloat(document.getElementById("sl").value) || 0;
+    parseFloat(
+        document.getElementById("sl").value
+    ) || 0;
+
 
     let target =
-        parseFloat(document.getElementById("targetInput").value) || 1;
+    parseFloat(
+        document.getElementById("targetInput").value
+    ) || 0;
 
-    let profit =
-        BASE_PROFIT *
-        (lot / BASE_LOT) *
-        (points / BASE_POINTS);
 
-    let loss =
-        BASE_PROFIT *
-        (lot / BASE_LOT) *
-        (sl / BASE_POINTS);
+    let quantity = 0;
+
+    let valuePerPoint = 0;
+
+    let profit = 0;
+
+    let loss = 0;
+
+
+    /* ======================================================
+       XAU/USD
+    ====================================================== */
+
+    if(config.type === "xau"){
+
+        quantity = size;
+
+        valuePerPoint =
+            config.baseProfit /
+            config.basePoints /
+            config.baseLot;
+
+        profit =
+            config.baseProfit *
+            (size / config.baseLot) *
+            (points / config.basePoints);
+
+        loss =
+            config.baseProfit *
+            (size / config.baseLot) *
+            (sl / config.basePoints);
+
+    }
+
+
+    /* ======================================================
+       ETH
+    ====================================================== */
+
+    else if(config.type === "eth"){
+
+        /*
+         ETH SCREENSHOT CONFIRMED:
+
+         Quantity × Price Movement = P/L
+        */
+
+        quantity = size;
+
+        valuePerPoint =
+            quantity;
+
+        profit =
+            quantity * points;
+
+        loss =
+            quantity * sl;
+
+    }
+
+
+    /* ======================================================
+       NIFTY / SENSEX
+    ====================================================== */
+
+    else if(config.type === "index"){
+
+        /*
+         NIFTY:
+         1 Lot = 65 Quantity
+
+         SENSEX:
+         1 Lot = 20 Quantity
+        */
+
+        quantity =
+            size * config.quantityPerLot;
+
+
+        valuePerPoint =
+            quantity;
+
+
+        profit =
+            quantity * points;
+
+
+        loss =
+            quantity * sl;
+
+    }
+
+
+    /* ======================================================
+       RISK REWARD
+    ====================================================== */
 
     let rr =
-        sl > 0 ? (points/sl).toFixed(2) : "0";
+    sl > 0
+    ? (points / sl).toFixed(2)
+    : "0";
+
+
+    /* ======================================================
+       TARGET %
+    ====================================================== */
 
     let targetPercent =
-        ((profit/target)*100).toFixed(2);
+    target > 0
+    ? ((profit / target) * 100).toFixed(2)
+    : "0";
 
-    document.getElementById("profit").innerHTML =
-        "$" + profit.toFixed(2);
 
-    document.getElementById("loss").innerHTML =
-        "$" + loss.toFixed(2);
+    /* ======================================================
+       FORMAT
+    ====================================================== */
 
-    document.getElementById("rr").innerHTML =
-        rr + " : 1";
+    document
+    .getElementById("profit")
+    .innerHTML =
+    config.currency +
+    profit.toFixed(2);
 
-    document.getElementById("targetPercent").innerHTML =
-        targetPercent + "%";
+
+    document
+    .getElementById("loss")
+    .innerHTML =
+    config.currency +
+    loss.toFixed(2);
+
+
+    document
+    .getElementById("rr")
+    .innerHTML =
+    rr + " : 1";
+
+
+    document
+    .getElementById("targetPercent")
+    .innerHTML =
+    targetPercent + "%";
+
+
+    /* ======================================================
+       QUANTITY DISPLAY
+    ====================================================== */
+
+    if(config.type === "eth"){
+
+        document
+        .getElementById("quantity")
+        .innerHTML =
+        quantity.toFixed(2) +
+        " ETH";
+
+    }
+
+    else{
+
+        document
+        .getElementById("quantity")
+        .innerHTML =
+        quantity.toFixed(2);
+
+    }
+
+
+    /* ======================================================
+       VALUE / POINT
+    ====================================================== */
+
+    document
+    .getElementById("valuePerPoint")
+    .innerHTML =
+    config.currency +
+    valuePerPoint.toFixed(2);
+
 }
 
-function resetFields(){
 
-    document.getElementById("lot").value = 0.08;
-    document.getElementById("points").value = 0;
-    document.getElementById("sl").value = 0;
+/* ==========================================================
+   RESET
+========================================================== */
+
+function resetCalculator(){
+
+    const config =
+    markets[currentMarket];
+
+
+    document
+    .getElementById("sizeInput")
+    .value =
+    config.defaultSize;
+
+
+    document
+    .getElementById("points")
+    .value =
+    0;
+
+
+    document
+    .getElementById("sl")
+    .value =
+    0;
+
+
+    document
+    .getElementById("targetInput")
+    .value =
+    1000;
+
+
     calculate();
+
 }
 
-document.querySelectorAll("input").forEach(input=>{
-    input.addEventListener("input",calculate);
+
+/* ==========================================================
+   LIVE CALCULATION
+========================================================== */
+
+document
+.querySelectorAll("input")
+.forEach(input => {
+
+    input.addEventListener(
+        "input",
+        calculate
+    );
+
 });
 
-calculate();
+
+/* ==========================================================
+   INITIAL
+========================================================== */
+
+selectMarket("xau");
 
 </script>
 
+
 </body>
+
 </html>
